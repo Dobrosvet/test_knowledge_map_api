@@ -1,0 +1,2 @@
+# test_knowledge_map_api
+test_knowledge_map_api
