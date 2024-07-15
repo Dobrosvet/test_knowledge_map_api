@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: "life_extension_map"
+      POSTGRES_USER: "test"
+      POSTGRES_PASSWORD: "test"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      # - habrdb-data:/var/lib/postgresql/data
+      # - {$cwd}\data:/var/lib/postgresql/data
+      - ~/life_extension_map_dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  habrdb-data:

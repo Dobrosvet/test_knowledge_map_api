@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Dev Pipeline",
+      "detail": "Quick launch of a development environment",
+      "type": "shell",
+      "command": "sh start_development.sh",
+      "problemMatcher": [],
+      "group": "build",
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}
