@@ -7,7 +7,297 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Author {
-  id   Int    @id @default(autoincrement())
+// TODO History
+
+/// ## ENG
+/// Block — knowledge map block for any entity.  
+/// The block contains any other entity in the system that needs to be considered in the knowledge map.  
+/// ## RUS
+/// Блок — блок карты знаний для любой сущности.
+/// Блок содержит любую другую сущность в системе которую нужно учитывать в карте знаний.
+/// Тип определяется наличием полей.
+/// ## Examples
+/// Symbol, set of symbols, text, image, video and etc.
+// FIXME ❗ Все UUID должны иметь информацию о timestamp
+model Block {
+  // Примерно так
+  // 
+  // id   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  // id   String  @id @default(dbgenerated("gen_uuid_v7(now())")) @db.Uuid
+
+  /// Unique text ID as UUID.
+  id String @id @default(uuid())
+
+  createdAt DateTime @default(now())
+
+  modelName   String
+  modelItemId String
+
+  dependency Link[] @relation("dependency")
+  usage      Link[] @relation("usage")
+}
+
+/// Link — Knowledge Map link between any blocks.
+model Link {
+  createdAt DateTime @default(now())
+
+  // dependencies (зависимости), causes (причины),
+  /// dependencies — relation to the texts on which the current one depends.
+  dependency   Block  @relation("dependency", fields: [dependencyId], references: [id])
+  dependencyId String
+
+  // usages места использования
+  /// ## ENG
+  /// Usages — relation to blocks that use the current.
+  /// ## RUS
+  /// Места использования — отношение к блокам, в которых используется текущий.
+  usage   Block  @relation("usage", fields: [usageId], references: [id])
+  usageId String
+
+  /// Type — type defining by app.
+  type String?
+
+  @@id([dependencyId, usageId])
+}
+
+/// Name of the languages by [ISO 639-2](https://en.wikipedia.org/wiki/ISO_639-2) standart
+/// Как строка только многоязычная
+model Translation {
+  /// Unique translation ID as UUID.
+  id String @id @default(uuid())
+
+  eng               String  @unique
+  engAutoTranslated Boolean
+
+  rus               String  @unique
+  rusAutoTranslated Boolean
+
+  animalPlatform AnimalPlatform[]
+  titleText      Text?            @relation(name: "titleTranslationToText")
+  contentText    Text?            @relation(name: "contentTranslationToText")
+  abstactText    Text?            @relation(name: "abstractTranslationToText")
+}
+
+/// ## ENG
+/// Source —
+/// ## Examples
+/// URL, URI, DOI, GEO, DDBJ/EMBL/GenBank, EBI:arrayexpress and etc.
+model Source {
+  /// Data handlers — handlers that were used to process the data.
+  dataHandlers DataHandler[]
+
+  /// 
+  type    String
+  /// 
+  payload String
+  /// 
+  /// If not base than its empty string `""`
+  base    String
+
+  ///
+  text   Text?   @relation(name: "SourceToText", fields: [textId], references: [id])
+  textId String?
+  // @@map("Link") — так можно делать алиасы
+
+  @@id([type, base, payload])
+}
+
+/// Text — scientific article published in a scientific journal, article preprint, popular science article, useful article, webpage, book, etc.
+model Text {
+  /// ID — unique Text ID as UUID.
+  id String @id @default(uuid())
+
+  /// Type — type defining by app.
+  type String?
+
+  authors Author[]
+
+  /// Created at — time of record creation.
+  createdAt DateTime @default(now())
+
+  // Fields with relation
+  // Поля с отношениями
+
+  // Ссылки вида
+  // { "type": type, "link": link }
+  // Сделаны затем что URL к ресурсу возможно может меняться
+  // а ещё для экономии места в базе данных
+  /// References to the source.  
+  /// First reference is original source.  
+  /// Examples: URL, bibliographic reference, JSON like `{ "type": type, "link": link }`.
+  sources Source[] @relation(name: "SourceToText")
+
+  // title Translation @relation("title", fields: [translationId], references: [id])
+  /// Title — title.
+  title   Translation @relation(name: "titleTranslationToText", fields: [titleId], references: [id])
+  titleId String      @unique
+
+  /// abstract
+  abstract   Translation? @relation(name: "abstractTranslationToText", fields: [abstractId], references: [id])
+  abstractId String?      @unique
+
+  // content Translation? @relation("content", fields: [translationId], references: [id])
+  /// Text — text content in English.
+  content   Translation? @relation(name: "contentTranslationToText", fields: [contentId], references: [id])
+  contentId String?      @unique
+
+  /// Full path to the text file.
+  filepath String?
+
+  /// DOI — Digital Object Identifier.
+  doi String?
+
+  /// PubMed Central ID — ID on the [PubMed Central](https://www.ncbi.nlm.nih.gov/pmc/) resource.
+  pmcid Int? @unique
+
+  /// PubMed ID — ID on the [PubMed](https://pubmed.ncbi.nlm.nih.gov/) resource.  
+  /// Articles with `PMID == 0` cannot be found on [PubMed](https://pubmed.ncbi.nlm.nih.gov/) resource.
+  pmid Int?
+
+  /// Journal — scientific journal of a published scientific article.
+  journal   Journal? @relation(fields: [journalId], references: [id])
+  journalId String?
+
+  /// Publication at — publication time.
+  pubAt DateTime?
+
+  /// License — license.
+  license String?
+
+  // TODO Нет тэгами это не надо называть по тому что это собственные метки, а ключевые слова достаются
+  // из статьи, должны по идее (Может назвать это тэгами? tags?)
+  /// keywords — keywords.
+  keywords String[]
+
+  /// Data handlers — handlers that were used to process the data.
+  dataHandlers DataHandler[]
+
+  /// TODO add Animals
+  /// TODO add AnimalPlaforms
+}
+
+// text ['pmcid' 'title' 'keywords' 'abstract' 'body']
+// metadata ['pmcid' 'pmid' 'doi' 'title' 'journal' 'publication_year' 'license']
+// authors ['pmcid' 'surname' 'given-names']
+// links ['pmcid' 'ext-link-type' 'href']
+
+// ext-link-type
+// Ссылки вытащенные из статьи, но только те что являются ссылками в разметке, некоторые ссылки являются просто текстом и были пропущены
+// TODO Исправить это по возможности
+// uri                   31020
+// doi                     372
+// DDBJ/EMBL/GenBank       237
+// NCBI:geo                 49
+// UniProt                  35
+// ftp                      16
+// ClinicalTrials.gov        9
+// wormbase                  8
+// NCBI:sra                  6
+// omim                      5
+// pmid                      5
+// PDB                       4
+// geo                       3
+// EBI:arrayexpress          1
+// pride                     1
+// 
+// Расположен на PubMed Central под спойлером с текстом
+// Copyright and License information
+
+/// Journal — scientific journal.
+model Journal {
+  /// Unique journal ID as UUID.
+  id String @id @default(uuid())
+
+  /// Data handlers — handlers that were used to process the data.
+  dataHandlers DataHandler[]
+
+  /// 
   name String
+
+  ///
+  link String
+
+  ///
+  text Text[]
+}
+
+model Author {
+  /// id — unique Author ID as UUID.
+  id String @id @default(uuid())
+  // id String @id @default(dbgenerated("uuid_generate_v1(now())")) @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  /// Data handlers — handlers that were used to process the data.
+  dataHandlers DataHandler[]
+
+  ///
+  firstName String
+  lastName  String
+
+  ocrid String?
+
+  //
+
+  text   Text?   @relation(fields: [textId], references: [id])
+  textId String?
+}
+
+/// Use in Articles
+model AnimalPlatform {
+  /// Unique animal platfom ID as UUID.
+  id           String      @id @default(uuid())
+  name         Translation @relation(fields: [translationId], references: [id])
+  animal       Animal      @relation(fields: [animalId], references: [id])
+  regxPatterns String
+
+  animalId      String
+  translationId String
+}
+
+/// Do not use in Articles (in Articles use AnimalPlatform)
+model Animal {
+  /// Unique animal ID as UUID.
+  id   String @id @default(uuid())
+  /// Name — name of the animal in English.
+  name String
+
+  /// Latin name — name of the animal in Latin.
+  nameLatin      String
+  animalPlatform AnimalPlatform[]
+}
+
+/// Data handler — handlers that were launched to process data.
+model DataHandler {
+  /// ID — unique DataHandler ID as UUID.
+  id String @id @default(uuid())
+
+  /// Created at — the time when the handler was started.  
+  /// Example: 2024.07.22 22:43:10.
+  createdAt DateTime @default(now())
+
+  /// Name — name of handler.  
+  /// Exapmles: pubget, function_name.
+  name String
+
+  /// Version — the version used for processing.
+  version String
+
+  // TODO add logs / log files
+
+  // Fields from other models.
+
+  text   Text?   @relation(fields: [textId], references: [id])
+  textId String?
+
+  journal   Journal? @relation(fields: [journalId], references: [id])
+  journalId String?
+
+  author   Author? @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  source        Source? @relation(fields: [sourceType, sourceBase, sourcePayload], references: [type, base, payload])
+  sourceType    String?
+  sourceBase    String?
+  sourcePayload String?
 }
