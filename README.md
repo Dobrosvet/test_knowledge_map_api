@@ -1,8 +1,12 @@
 # test_knowledge_map_api
 test_knowledge_map_api
 
+Do for launch environment and fast start dev
+`Ctrl`+`Shift`+`P` → Tasks: Run Task → Run Dev Pipeline
+
 ❗Задеплоить всё на [Railway](https://railway.app/)❗
 
+❗❗ Нужно ЗАПРЕТИТЬ всем подряд и в любой момент запускать `prisma generate` и миграции нужно как то сделать защиту от ошибок. Так же нужно сделать защиту не только от ошибки но и от последствий ошибки, то есть после потенциальной ошибки, если она всё таки сшучится
 
 ## Принимаемые решения
 

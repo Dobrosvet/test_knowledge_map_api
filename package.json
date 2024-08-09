@@ -9,19 +9,19 @@
     "vscode": "^1.90.0"
   },
   "scripts": {
-    "start": "pnpm prisma generate && sleep 5 && pnpm prisma migrate dev --name init && pnpm prisma migrate && pnpm vite-node .\\src\\index.ts"
+    "start": "pnpm prisma db push && pnpm prisma generate && pnpm prisma migrate && pnpm vite-node .\\src\\index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.10.4",
-    "@prisma/client": "^5.16.1",
+    "@prisma/client": "^5.18.0",
     "graphql": "^16.9.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
-    "prisma": "^5.16.1",
+    "prisma": "^5.18.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",

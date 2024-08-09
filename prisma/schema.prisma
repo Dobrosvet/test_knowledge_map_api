@@ -66,11 +66,11 @@ model Translation {
   /// Unique translation ID as UUID.
   id String @id @default(uuid())
 
-  eng               String  @unique
-  engAutoTranslated Boolean
+  eng               String?
+  engAutoTranslated Boolean?
 
-  rus               String  @unique
-  rusAutoTranslated Boolean
+  rus               String?
+  rusAutoTranslated Boolean?
 
   animalPlatform AnimalPlatform[]
   titleText      Text?            @relation(name: "titleTranslationToText")
@@ -159,7 +159,7 @@ model Text {
   journalId String?
 
   /// Publication at — publication time.
-  pubAt DateTime?
+  pubAt DateTime? @map("publication_date")
 
   /// License — license.
   license String?
@@ -212,10 +212,10 @@ model Journal {
   dataHandlers DataHandler[]
 
   /// 
-  name String
+  name String @unique()
 
   ///
-  link String
+  link String?
 
   ///
   text Text[]
@@ -232,8 +232,8 @@ model Author {
   dataHandlers DataHandler[]
 
   ///
-  firstName String
-  lastName  String
+  surname    String
+  givenNames String @map("given_names")
 
   ocrid String?
 

@@ -4,13 +4,19 @@
     {
       "label": "Run Dev Pipeline",
       "detail": "Quick launch of a development environment",
-      "type": "shell",
-      "command": "sh start_development.sh",
-      "problemMatcher": [],
-      "group": "build",
-      "runOptions": {
-        "runOn": "folderOpen"
-      }
+      "windows": {
+        "command": "${workspaceFolder}/start_development.ps1",
+        "type": "shell"
+      },
+      "linux": {
+        "command": "${workspaceFolder}/start_development.sh",
+        "type": "shell"
+      },
+      "problemMatcher": [
+        "$msCompile",
+        "$gcc"
+      ],
+      "group": "build"
     }
   ]
 }

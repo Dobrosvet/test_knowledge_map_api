@@ -2,36 +2,15 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import typeDefs from './gql/library.graphql';
 
-
 import { PrismaClient } from '@prisma/client'
+
+// FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
 const prisma = new PrismaClient()
 
-// "compile": "tsc && vite build",
-// "start": "npm run compile && node ./dist/index.js"
-
 async function main() {
-  const books = [
-    {
-      title: 'The Awakening',
-      author: 'Kate Chopin',
-    },
-    {
-      title: 'City of Glass',
-      author: 'Paul Auster',
-    },
-  ];
-
-  const authors = [
-    {
-      name: 'Kate Chopin',
-    },
-    {
-      name: 'Paul Auster',
-    },
-  ];
-
-  // FIXME С такими полями тихо отдаёт none из базы
+  // FIXME С такими полями тихо отдаёт none из базы.
+  // Сделать Design Time проверку типов 
   // const authors = [
   //   {
   //     boom: 'stroka',
@@ -43,16 +22,13 @@ async function main() {
   //   },
   // ];
   
+  // FIXME ❗ Нужно заменить тестами
   await prisma.author.create({
     data: {
-      name: 'Доктор Кто'
+      surname: 'Кто',
+      givenNames: 'Доктор',
     }
   })
-
-  const allAuthors = await prisma.author.findMany()
-
-
-
 
   // GraphQL запросы
   // Resolvers define how to fetch the types defined in your schema.
@@ -61,8 +37,9 @@ async function main() {
   // моделью иначе оно тих не подходит и данных нет вообще
   const resolvers = {
     Query: {
-      books: () => books,
-      authors: () => allAuthors
+      translations: async () =>  await prisma.translation.findMany(),
+      texts: async () =>  await prisma.text.findMany(),
+      authors: async () => await prisma.author.findMany(),
     },
   };
 
