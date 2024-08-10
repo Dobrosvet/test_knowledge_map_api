@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite'
 import graphqlLoader from "vite-plugin-graphql-loader";
+import vercel from 'vite-plugin-vercel';
 
 export default defineConfig({
-  plugins: [graphqlLoader()],
+  server: {
+    port: process.env.PORT as unknown as number,
+  },
+  plugins: [graphqlLoader(), vercel()],
 })
