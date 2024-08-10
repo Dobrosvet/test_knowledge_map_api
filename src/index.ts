@@ -4,6 +4,8 @@ import typeDefs from './gql/library.graphql';
 
 import { PrismaClient } from '@prisma/client'
 
+// https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
+
 // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
 const prisma = new PrismaClient()
@@ -50,16 +52,18 @@ async function main() {
     resolvers,
   });
 
+  // https://www.apollographql.com/docs/apollo-server/api/apollo-server/
+  // ❗ serverless env вроде Vercel должно само запустить сервер
 
   // Passing an ApolloServer instance to the `startStandaloneServer` function:
   //  1. creates an Express app
   //  2. installs your ApolloServer instance as middleware
   //  3. prepares your app to handle incoming requests
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-  });
+  // const { url } = await startStandaloneServer(server, {
+  //   listen: { port: 4000 },
+  // });
 
-  console.log(`🚀  Server ready at: ${url}`);
+  // console.log(`🚀  Server ready at: ${url}`);
 }
 
 main()
