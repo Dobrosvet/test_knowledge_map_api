@@ -37,26 +37,24 @@ const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
   loaders: [new GraphQLFileLoader()]
 });
 
-const main = async () => {
-  const app = express()
+const app = express()
 
-  app.use(cors())
+app.use(cors())
 
-  const apolloServer = new ApolloServer({ 
-    typeDefs,
-    resolvers,
-    introspection: true,
-    // playground: true,
-  });
+const apolloServer = new ApolloServer({ 
+  typeDefs,
+  resolvers,
+  introspection: true,
+  // playground: true,
+});
 
-  apolloServer.applyMiddleware({ path: '/graphql', app})
+apolloServer.applyMiddleware({ path: '/graphql', app})
 
-  app.listen(8080, () => {
-    console.log('🚀 Server started');
-  })
-}
+export default app.listen(8080, () => {
+  console.log('🚀 Server started');
+})
 
-main();
+
 
 // v4
 // const apolloServer = new ApolloServer({ 
