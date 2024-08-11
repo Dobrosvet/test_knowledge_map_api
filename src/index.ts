@@ -1,15 +1,9 @@
-// import { ApolloServer } from '@apollo/server';
-// import { startStandaloneServer } from '@apollo/server/standalone';
 
-// import { ApolloServer } from 'apollo-server-express';
+import express from "express";
+import { ApolloServer } from 'apollo-server-express';
 // import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 // import http from "http";
-// import express from "express";
-// import cors from "cors";
-
-import { ApolloServer } from 'apollo-server-micro'
-import cors from 'micro-cors';
-import { send } from 'micro';
+import cors from "cors";
 
 import { PrismaClient } from '@prisma/client'
 
@@ -20,31 +14,11 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 // https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
 // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
 // https://github.com/PreciousChicken/vercel-apollo-server-react/
+// Официальный рантайм https://www.npmjs.com/package/@vercel/node
 
 // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
 const prisma = new PrismaClient()
-
-// FIXME С такими полями тихо отдаёт none из базы.
-// Сделать Design Time проверку типов 
-// const authors = [
-//   {
-//     boom: 'stroka',
-//     title: 'Kate Chopin',
-//   },
-//   {
-//     boom: 'stroka',
-//     title: 'Paul Auster',
-//   },
-// ];
-
-// FIXME ❗ Нужно заменить тестами
-await prisma.author.create({
-  data: {
-    surname: 'Кто',
-    givenNames: 'Доктор',
-  }
-})
 
 // GraphQL запросы
 // Resolvers define how to fetch the types defined in your schema.
@@ -63,20 +37,41 @@ const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
   loaders: [new GraphQLFileLoader()]
 });
 
-// v4
-const apolloServer = new ApolloServer({ 
-  typeDefs,
-  resolvers,
-  introspection: true,
-  // playground: true,
- });
+const main = async () => {
+  const app = express()
 
-export default apolloServer.start().then(() => {
-  const handler = apolloServer.createHandler({
-    path: '/api/graphql',
+  app.use(cors())
+
+  const apolloServer = new ApolloServer({ 
+    typeDefs,
+    resolvers,
+    introspection: true,
+    // playground: true,
   });
-  return cors((req, res) => req.method === 'OPTIONS' ? send(res, 200, 'ok') : handler(req, res))
-})
+
+  apolloServer.applyMiddleware({ path: '/graphql', app})
+
+  app.listen(8080, () => {
+    console.log('🚀 Server started');
+  })
+}
+
+main();
+
+// v4
+// const apolloServer = new ApolloServer({ 
+//   typeDefs,
+//   resolvers,
+//   introspection: true,
+//   // playground: true,
+//  });
+
+// export default apolloServer.start().then(() => {
+//   const handler = apolloServer.createHandler({
+//     path: '/api/graphql',
+//   });
+//   return cors((req, res) => req.method === 'OPTIONS' ? send(res, 200, 'ok') : handler(req, res))
+// })
 
 // v3
 // const startApolloServer = async(app, httpServer) => {
