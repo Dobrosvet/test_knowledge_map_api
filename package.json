@@ -9,7 +9,7 @@
     "vscode": "^1.90.0"
   },
   "scripts": {
-    "build": "tsc && copyfiles -u 1 src/gql/library.graphql dist && node dist/index.js",
+    "build": "pnpm prisma generate && tsc && copyfiles -u 1 src/gql/library.graphql dist && node dist/index.js",
     "start": "pnpm prisma db push && pnpm prisma generate && pnpm prisma migrate && pnpm vite-node .\\src\\index.ts",
     "prod_start": "node dist/index.js"
   },
