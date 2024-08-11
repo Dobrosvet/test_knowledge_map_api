@@ -21,9 +21,6 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
 // https://github.com/PreciousChicken/vercel-apollo-server-react/
 
-
-const cors = cors()
-
 // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
 const prisma = new PrismaClient()
