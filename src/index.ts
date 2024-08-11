@@ -1,8 +1,11 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import typeDefs from './gql/library.graphql';
 
 import { PrismaClient } from '@prisma/client'
+
+import { loadSchemaSync } from '@graphql-tools/load';
+import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
+// import typeDefs from './gql/library.graphql';
 
 // https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
 
@@ -44,6 +47,10 @@ async function main() {
       authors: async () => await prisma.author.findMany(),
     },
   };
+
+  const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
+    loaders: [new GraphQLFileLoader()]
+  });
 
   // The ApolloServer constructor requires two parameters: your schema
   // definition and your set of resolvers.
