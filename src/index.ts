@@ -8,6 +8,8 @@
 // import cors from "cors";
 
 import { ApolloServer } from 'apollo-server-micro'
+const cors = require('micro-cors')();
+import { send } from 'micro';
 
 import { PrismaClient } from '@prisma/client'
 
@@ -63,13 +65,18 @@ const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
 });
 
 // v4
-export default new ApolloServer({
+const apolloServer = new ApolloServer({ 
   typeDefs,
   resolvers,
   introspection: true,
   // playground: true,
-}).createHandler({
-  path: '/api/graphql',
+ });
+
+export default apolloServer.start().then(() => {
+  const handler = apolloServer.createHandler({
+    path: '/api/graphql',
+  });
+  return cors((req, res) => req.method === 'OPTIONS' ? send(res, 200, 'ok') : handler(req, res))
 })
 
 // v3

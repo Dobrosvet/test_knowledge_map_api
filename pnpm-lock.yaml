@@ -34,7 +34,7 @@ importers:
         version: 3.13.0(express@4.19.2)(graphql@16.9.0)
       apollo-server-micro:
         specifier: ^3.13.0
-        version: 3.13.0(graphql@16.9.0)(micro@9.4.1)
+        version: 3.13.0(graphql@16.9.0)(micro@10.0.1)
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -47,6 +47,12 @@ importers:
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.9.0)
+      micro:
+        specifier: ^10.0.1
+        version: 10.0.1
+      micro-cors:
+        specifier: ^0.1.1
+        version: 0.1.1
       next:
         specifier: ^14.2.5
         version: 14.2.5(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2740,9 +2746,13 @@ packages:
     resolution: {integrity: sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==}
     engines: {node: '>= 0.6'}
 
-  micro@9.4.1:
-    resolution: {integrity: sha512-Lpjcbp6Y9GJIfewxDfTmu9eW0rt0MGo+Gs1d3yJLFa7mhErtKkCngGhDbA/O1gqUjEwsHh+jWPg8BJ0Bx4AgFA==}
-    engines: {node: '>= 8.0.0'}
+  micro-cors@0.1.1:
+    resolution: {integrity: sha512-6WqIahA5sbQR1Gjexp1VuWGFDKbZZleJb/gy1khNGk18a6iN1FdTcr3Q8twaxkV5H94RjxIBjirYbWCehpMBFw==}
+    engines: {node: '>=6'}
+
+  micro@10.0.1:
+    resolution: {integrity: sha512-9uwZSsUrqf6+4FLLpiPj5TRWQv5w5uJrJwsx1LR/TjqvQmKC1XnGQ9OHrFwR3cbZ46YqPqxO/XJCOpWnqMPw2Q==}
+    engines: {node: '>= 16.0.0'}
     hasBin: true
 
   micromatch@4.0.7:
@@ -5584,12 +5594,12 @@ snapshots:
       - encoding
       - supports-color
 
-  apollo-server-micro@3.13.0(graphql@16.9.0)(micro@9.4.1):
+  apollo-server-micro@3.13.0(graphql@16.9.0)(micro@10.0.1):
     dependencies:
       '@hapi/accept': 5.0.2
       apollo-server-core: 3.13.0(graphql@16.9.0)
       apollo-server-types: 3.8.0(graphql@16.9.0)
-      micro: 9.4.1
+      micro: 10.0.1
       type-is: 1.6.18
     transitivePeerDependencies:
       - encoding
@@ -6878,7 +6888,9 @@ snapshots:
 
   methods@1.1.2: {}
 
-  micro@9.4.1:
+  micro-cors@0.1.1: {}
+
+  micro@10.0.1:
     dependencies:
       arg: 4.1.0
       content-type: 1.0.4
