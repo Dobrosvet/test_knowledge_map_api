@@ -8,7 +8,7 @@
 // import cors from "cors";
 
 import { ApolloServer } from 'apollo-server-micro'
-const cors = require('micro-cors')();
+import cors from 'micro-cors';
 import { send } from 'micro';
 
 import { PrismaClient } from '@prisma/client'
@@ -21,6 +21,8 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
 // https://github.com/PreciousChicken/vercel-apollo-server-react/
 
+
+const cors = cors()
 
 // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
