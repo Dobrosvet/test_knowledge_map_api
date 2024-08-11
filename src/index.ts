@@ -75,16 +75,14 @@ const startApolloServer = async(app, httpServer) => {
 
   await server.start();
 
-  app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-);
-  console.log(`🚀  Server ready at:`);
+  
   server.applyMiddleware({ app });
 }
 
 startApolloServer(app, httpServer);
 
 export default httpServer;
+console.log(`🚀 httpServer exported`);
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
