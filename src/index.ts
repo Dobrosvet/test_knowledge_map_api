@@ -1,6 +1,6 @@
 // import { ApolloServer } from '@apollo/server';
 // import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import http from "http";
 import express from "express";
@@ -74,6 +74,11 @@ const startApolloServer = async(app, httpServer) => {
   });
 
   await server.start();
+
+  app.listen({ port: 4000 }, () =>
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);
+  console.log(`🚀  Server ready at:`);
   server.applyMiddleware({ app });
 }
 
