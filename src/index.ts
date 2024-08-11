@@ -1,10 +1,13 @@
 // import { ApolloServer } from '@apollo/server';
 // import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServer } from 'apollo-server-express';
-import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-import http from "http";
-import express from "express";
-import cors from "cors";
+
+// import { ApolloServer } from 'apollo-server-express';
+// import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+// import http from "http";
+// import express from "express";
+// import cors from "cors";
+
+import { ApolloServer } from 'apollo-server-micro'
 
 import { PrismaClient } from '@prisma/client'
 
@@ -14,14 +17,8 @@ import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 
 // https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
 // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
+// https://github.com/PreciousChicken/vercel-apollo-server-react/
 
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-const httpServer = http.createServer(app);
 
 // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
@@ -65,24 +62,34 @@ const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
   loaders: [new GraphQLFileLoader()]
 });
 
-// v3
-const startApolloServer = async(app, httpServer) => {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  });
+// v4
+export default new ApolloServer({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  playground: true,
+}).createHandler({
+  path: '/api/graphql',
+})
 
-  await server.start();
+// v3
+// const startApolloServer = async(app, httpServer) => {
+//   const server = new ApolloServer({
+//     typeDefs,
+//     resolvers,
+//     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+//   });
+
+//   await server.start();
 
   
-  server.applyMiddleware({ app });
-}
+//   server.applyMiddleware({ app });
+// }
 
-startApolloServer(app, httpServer);
+// startApolloServer(app, httpServer);
 
-export default httpServer;
-console.log(`🚀 httpServer exported`);
+// export default httpServer;
+// console.log(`🚀 httpServer exported`);
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
