@@ -5,25 +5,38 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "^18",
+    "node": "^18.17.0",
     "vscode": "^1.90.0"
   },
   "scripts": {
-    "start": "pnpm prisma db push && pnpm prisma generate && pnpm prisma migrate && pnpm vite-node .\\src\\index.ts"
+    "build": "echo \"Nothing\"",
+    "start": "pnpm prisma db push && pnpm prisma generate && pnpm prisma migrate && pnpm vite-node .\\src\\index.ts",
+    "prod": "pnpm prisma generate && pnpm vite-node .\\src\\index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.10.4",
+    "@luckycatfactory/esbuild-graphql-loader": "^3.8.1",
     "@prisma/client": "^5.18.0",
+    "@saeris/apollo-server-vercel": "^1.0.1",
     "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "vite-plugin-vercel": "^8.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-resolvers": "^4.2.1",
     "@types/node": "^20.14.10",
+    "esbuild": "0.23.0",
     "prisma": "^5.18.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.17.0",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
     "vite-node": "^1.6.0",
