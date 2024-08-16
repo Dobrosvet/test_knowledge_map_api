@@ -23,6 +23,7 @@
     "@luckycatfactory/esbuild-graphql-loader": "^3.8.1",
     "@prisma/client": "^5.18.0",
     "@saeris/apollo-server-vercel": "^1.0.1",
+    "@vercel/node": "^3.2.8",
     "apollo-server-core": "^3.13.0",
     "apollo-server-express": "^3.13.0",
     "apollo-server-micro": "^3.13.0",

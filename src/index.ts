@@ -1,67 +1,75 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-import express from "express";
-import { ApolloServer } from 'apollo-server-express';
-// import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-// import http from "http";
-import cors from "cors";
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  const { name = 'Knowledge Map' } = req.query
+  return res.json({
+    message: `Hello ${name}!`,
+  })
+}
 
-import { PrismaClient } from '@prisma/client'
+// import express from "express";
+// import { ApolloServer } from 'apollo-server-express';
+// // import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+// // import http from "http";
+// import cors from "cors";
 
-import { loadSchemaSync } from '@graphql-tools/load';
-import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-// import typeDefs from './gql/library.graphql';
+// import { PrismaClient } from '@prisma/client'
 
-// https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
-// https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
-// https://github.com/PreciousChicken/vercel-apollo-server-react/
-// Официальный рантайм https://www.npmjs.com/package/@vercel/node
-// Ещё и пример GraphQL Voyager https://github.com/Covid19-GraphQL/covid-graph-graphql
+// import { loadSchemaSync } from '@graphql-tools/load';
+// import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
+// // import typeDefs from './gql/library.graphql';
 
-// FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
+// // https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
+// // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
+// // https://github.com/PreciousChicken/vercel-apollo-server-react/
+// // Официальный рантайм https://www.npmjs.com/package/@vercel/node
+// // Ещё и пример GraphQL Voyager https://github.com/Covid19-GraphQL/covid-graph-graphql
 
-const prisma = new PrismaClient()
+// // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
-// GraphQL запросы
-// Resolvers define how to fetch the types defined in your schema.
-// This resolver retrieves books from the "books" array above.
-// FIXME добавить проверку на то что данные должны совпадать с 
-// моделью иначе оно тих не подходит и данных нет вообще
-const resolvers = {
-  Query: {
-    translations: async () =>  await prisma.translation.findMany(),
-    texts: async () =>  await prisma.text.findMany(),
-    authors: async () => await prisma.author.findMany(),
-  },
-};
+// const prisma = new PrismaClient()
 
-const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
-  loaders: [new GraphQLFileLoader()]
-});
+// // GraphQL запросы
+// // Resolvers define how to fetch the types defined in your schema.
+// // This resolver retrieves books from the "books" array above.
+// // FIXME добавить проверку на то что данные должны совпадать с 
+// // моделью иначе оно тих не подходит и данных нет вообще
+// const resolvers = {
+//   Query: {
+//     translations: async () =>  await prisma.translation.findMany(),
+//     texts: async () =>  await prisma.text.findMany(),
+//     authors: async () => await prisma.author.findMany(),
+//   },
+// };
 
-const app = express()
+// const typeDefs = loadSchemaSync('./dist/gql/library.graphql', {
+//   loaders: [new GraphQLFileLoader()]
+// });
 
-app.use(cors())
+// const app = express()
 
-const apolloServer = new ApolloServer({ 
-  typeDefs,
-  resolvers,
-  introspection: true,
-  // playground: true,
-});
+// app.use(cors())
 
-await apolloServer.start()
+// const apolloServer = new ApolloServer({ 
+//   typeDefs,
+//   resolvers,
+//   introspection: true,
+//   // playground: true,
+// });
 
-apolloServer.applyMiddleware({ path: '/graphql', app})
+// await apolloServer.start()
 
-app.listen(8080, () => {
-  console.log('🚀 Server started');
-})
+// apolloServer.applyMiddleware({ path: '/graphql', app})
 
-export default app.listen(8080, () => {
-  console.log('🚀 Server started');
-})
+// app.listen(8080, () => {
+//   console.log('🚀 Server started');
+// })
 
+// export default app.listen(8080, () => {
+//   console.log('🚀 Server started');
+// })
 
+// =============================================================
 
 // v4
 // const apolloServer = new ApolloServer({ 
