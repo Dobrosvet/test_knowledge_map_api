@@ -7,25 +7,14 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   })
 }
 
-// import express from "express";
-// import { ApolloServer } from 'apollo-server-express';
-// // import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-// // import http from "http";
-// import cors from "cors";
 
-// import { PrismaClient } from '@prisma/client'
+// https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
+// https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
+// https://github.com/PreciousChicken/vercel-apollo-server-react/
+// Официальный рантайм https://www.npmjs.com/package/@vercel/node
+// Ещё и пример GraphQL Voyager https://github.com/Covid19-GraphQL/covid-graph-graphql
 
-// import { loadSchemaSync } from '@graphql-tools/load';
-// import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
-// // import typeDefs from './gql/library.graphql';
-
-// // https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n
-// // https://medium.com/@sppericat/how-to-setup-an-apollo-graphql-server-on-vercel-cc3f2dd72b3e
-// // https://github.com/PreciousChicken/vercel-apollo-server-react/
-// // Официальный рантайм https://www.npmjs.com/package/@vercel/node
-// // Ещё и пример GraphQL Voyager https://github.com/Covid19-GraphQL/covid-graph-graphql
-
-// // FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
+// FIXME ❗ Настроить время и часовую зону в базе данных (преверить нужно ли ещё настраивать что то подобное)
 
 // const prisma = new PrismaClient()
 

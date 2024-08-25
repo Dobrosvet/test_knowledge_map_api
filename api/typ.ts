@@ -1,0 +1,155 @@
+import { gql } from 'apollo-server-express'
+
+export default gql`
+# Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+
+type Block {
+  id: String
+
+  modelName: String
+  modelItemId: String
+
+  dependency: [Link]
+  usage: [Link]
+}
+
+type Link {
+  dependency: Block
+  dependencyId: String
+
+  usage: Block
+  usageId: String
+
+  type: String
+}
+
+type Translation {
+  id: String
+
+  eng: String
+  engAutoTranslated: Boolean
+
+  rus: String
+  rusAutoTranslated: Boolean
+
+  animalPlatform: [AnimalPlatform]
+  titleText: Text
+  contentText: Text
+}
+
+type Source {
+  dataHandlers: [DataHandler]
+
+  type: String
+  payload: String
+
+  base: String
+
+  text: Text
+  textId: String
+}
+
+type Text {
+  id: String
+  type: String
+
+  abstract: String
+  authors: [Author]
+  createdAt: String
+  sources: [Source]
+  title: Translation
+  titleId: String
+  content: Translation
+  contentId: String
+  filepath: String
+  doi: String
+  pmcid: Int
+  pmid: Int
+
+  journal: Journal
+  journalId: String
+
+  pubAt: String
+
+  license: String
+
+  keywords: [String]
+  dataHandlers: [DataHandler]
+}
+
+type Journal {
+  id: String
+  dataHandlers: [DataHandler]
+  name: String
+  link: String
+  text: [Text]
+}
+
+type Author {
+  id: String
+  createdAt: String
+  dataHandlers: [DataHandler]
+  firstName: String
+  lastName: String
+
+  ocrid: String
+
+  text: Text
+  textId: String
+}
+
+type AnimalPlatform {
+  id: String
+  name: Translation
+  animal: Animal
+  regxPatterns: String
+
+  animalId: String
+  translationId: String
+}
+
+type Animal {
+  id: String
+  name: String
+
+  nameLatin: String
+  animalPlatform: [AnimalPlatform]
+}
+
+type DataHandler {
+  id: String
+  createdAt: String
+  name: String
+  version: String
+
+  text: Text
+  textId: String
+
+  journal: Journal
+  journalId: String
+
+  author: Author
+  authorId: String
+
+  source: Source
+  sourceType: String
+  sourceBase: String
+  sourcePayload: String
+}
+
+# The "Query" type is special: it lists all of the available queries that
+# clients can execute, along with the return type for each. In this
+# case, the "books" query returns an array of zero or more Books (defined above).
+type Query {
+  blocks: [Block]
+  links: [Link]
+  translations: [Translation]
+  sources: [Source]
+  texts: [Text]
+  journals: [Journal]
+  authors: [Author]
+  animalPlatforms: [AnimalPlatform]
+  animals: [Animal]
+  dataHandlers: [DataHandler]
+}
+`;
